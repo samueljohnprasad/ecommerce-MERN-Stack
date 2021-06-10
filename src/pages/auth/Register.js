@@ -1,17 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { auth } from "../../firebase";
 import { toast } from "react-toastify";
-const Register = () => {
+import { useDispatch, useSelector } from "react-redux";
+const Register = ({history}) => {
   const [email, setEmail] = useState("");
-  
+
+  //state
+  const { user } = useSelector((state) => ({ ...state }));
 
   //events
+  useEffect(() => {
+    if (user && user.token) history.push("/");
+    console.log(user, "user");
+  }, [user]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     //console.log("env", process.env.REACT_APP_REGISTER_REDIRECT_URL);
 
     const config = {
-      url:process.env.REACT_APP_REGISTER_REDIRECT_URL,
+      url: process.env.REACT_APP_REGISTER_REDIRECT_URL,
       handleCodeInApp: true,
     };
 
@@ -32,10 +40,10 @@ const Register = () => {
         className="form-control"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder='enter your email'
+        placeholder="enter your email"
         autoFocus
       ></input>
-      <br/>
+      <br />
       <button type="submit" className="btn btn-raised">
         Register
       </button>

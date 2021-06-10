@@ -7,15 +7,21 @@ const ForgotPassword = ({ history }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { user } = useSelector((state) => ({ ...state }));
   //event
+  useEffect(() => {
+      if(user && user.token) history.push('/')
+
+  },[user]);
   const handleForgotPass = async (e) => {
     e.preventDefault();
     setLoading(true);
     const config = {
-      url:process.env.REACT_APP_FORGOT_PASSWORD_REDIRECT_URL,
+      url: process.env.REACT_APP_FORGOT_PASSWORD_REDIRECT_URL,
       handleCodeInApp: true,
     };
-    await auth.sendPasswordResetEmail(email, config)
+    await auth
+      .sendPasswordResetEmail(email, config)
       .then(() => {
         setEmail("");
         setLoading(false);
